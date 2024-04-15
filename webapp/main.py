@@ -35,3 +35,21 @@ def generate(body: Body):
     """
     string = base64.b64encode(os.urandom(64))[:body.length].decode('utf-8')
     return {'token': string}
+
+    # generate a Pydantic model from the JSON response
+    # return Token(token=string)
+    # Create a FastAPI endpoint that accepts a POST request with a JSON body containing a single field called "text" and returns a checksum of the text 
+
+    
+from fastapi import FastAPI
+import hashlib
+
+app = FastAPI()
+
+class Item(BaseModel):
+    text: str
+
+@app.post("/checksum")
+async def create_checksum(item: Item):
+    checksum = hashlib.md5(item.text.encode()).hexdigest()
+    return {"checksum": checksum}
